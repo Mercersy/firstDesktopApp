@@ -46,6 +46,8 @@ def add_command():
 def delete_command():
     backend.delete(selected_tuple[0])
 
+def update_command():
+    backend.update(selected_tuple[0], title_text.get(), date_text.get(), skills_text.get(), details_text.get())
 
 window = Tk()
 
@@ -79,7 +81,7 @@ details_text = StringVar()
 e4 = Entry(window, textvariable = details_text)
 e4.grid(row = 6, column = 1)
 
-list1 = Listbox(window, height = 6, width = 35)
+list1 = Listbox(window, height = 11, width = 35)
 list1.grid(row = 0, column = 2, rowspan = 7, columnspan = 2)
 
 sb1 = Scrollbar(window)
@@ -99,13 +101,16 @@ b2.grid(row = 1, column = 5)
 b3 = Button(window, text = "Add Entry", width = 12, command = add_command)
 b3.grid(row = 2, column = 5)
 
-b4 = Button(window, text = "Update Entry", width = 12,) #command = update_command)
+b4 = Button(window, text = "Update Entry", width = 12, command = update_command)
 b4.grid(row = 3, column = 5)
 
 b5 = Button(window, text = "Delete", width = 12, command = delete_command)
 b5.grid(row = 4, column = 5)
 
-b6 = Button(window, text = "Close", width = 12)
+b6 = Button(window, text = "Import...", width = 12)
 b6.grid(row = 5, column = 5)
+
+b6 = Button(window, text = "Close", width = 12, command = window.destroy)
+b6.grid(row = 6, column = 5)
 
 window.mainloop()

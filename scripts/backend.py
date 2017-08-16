@@ -45,7 +45,7 @@ def update(id, title, date, skills, details):
     conn = sqlite3.connect("projs.db")
     cur = conn.cursor()
     cur.execute("UPDATE myProj SET title = ?, pdate = ?, skills = ?, details = ?\
-                WHERE id = ?", (id, title, date, skills, details))
+                WHERE id = ?", (title, date, skills, details, id))
     conn.commit()
     conn.close()
 
