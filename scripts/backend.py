@@ -1,56 +1,39 @@
 import sqlite3
 
-def connect():
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS myProj (id INTEGER PRIMARY KEY, \
-                title TEXT, pdate DATE, skills TEXT, details TEXT)")
-    conn.commit()
-    conn.close()
+class Database:
 
-def insert(title, date, skills, details):
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("INSERT INTO myProj VALUES (NULL, ?, ?, ?, ?)", \
-                (title, date, skills, details))
-    conn.commit()
-    conn.close()
+    def __init__(self, db):
+        self.conn = sqlite3.connect(db)
+        self.cur = self.conn.cursor()
+        self.cur.execute("CREATE TABLE IF NOT EXISTS myProj (id INTEGER PRIMARY KEY, \
+                    title TEXT, pdate DATE, skills TEXT, details TEXT)")
+        self.conn.commit()
 
-def view():
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM myProj")
-    rows = cur.fetchall()
-    conn.close()
-    return rows
+    def insert(self, title, date, skills, details):
+        self.cur.execute("INSERT INTO myProj VALUES (NULL, ?, ?, ?, ?)", \
+                    (title, date, skills, details))
+        self.conn.commit()
 
-def search(title = "", date = "", skills = "", details = ""):
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM myProj WHERE title LIKE ? AND pdate LIKE ? AND \
-                skills LIKE ? AND details LIKE ?", ('%' + title + '%', \
-                '%' + date + '%', '%' + skills + '%', '%' + details + '%'))
-    rows = cur.fetchall()
-    conn.close()
-    return rows
+    def view(self):
+        self.cur.execute("SELECT * FROM myProj")
+        rows = self.cur.fetchall()
+        return rows
 
-def delete(id):
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("DELETE FROM myProj where id = ?", (id,))
-    conn.commit()
-    conn.close()
+    def search(self, title = "", date = "", skills = "", details = ""):
+        self.cur.execute("SELECT * FROM myProj WHERE title LIKE ? AND pdate LIKE ? AND \
+                    skills LIKE ? AND details LIKE ?", ('%' + title + '%', \
+                    '%' + date + '%', '%' + skills + '%', '%' + details + '%'))
+        rows = self.cur.fetchall()
+        return rows
 
-def update(id, title, date, skills, details):
-    conn = sqlite3.connect("projs.db")
-    cur = conn.cursor()
-    cur.execute("UPDATE myProj SET title = ?, pdate = ?, skills = ?, details = ?\
-                WHERE id = ?", (title, date, skills, details, id))
-    conn.commit()
-    conn.close()
+    def delete(self, id):
+        self.cur.execute("DELETE FROM myProj where id = ?", (id,))
+        self.conn.commit()
 
+    def update(self, id, title, date, skills, details):
+        self.cur.execute("UPDATE myProj SET title = ?, pdate = ?, skills = ?, details = ?\
+                    WHERE id = ?", (title, date, skills, details, id))
+        self.conn.commit()
 
-connect()
-#insert('ert', '2016-08', 'Python', 'qweqwe')
-#print(view())
-#print(search(title = "rt"))
+    def __del__(self):
+        self.conn.close()
